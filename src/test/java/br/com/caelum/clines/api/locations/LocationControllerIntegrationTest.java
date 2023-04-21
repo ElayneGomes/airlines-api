@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@TestPropertySource(properties = {"DB_NAME=clines_test","spring.jpa.hibernate.ddlAuto:create-drop"})
+@TestPropertySource(properties = {"DB_NAME=clines","spring.jpa.hibernate.ddlAuto:create-drop"})
 @AutoConfigureMockMvc
 @AutoConfigureTestEntityManager
 @Transactional

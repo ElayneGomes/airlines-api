@@ -1,8 +1,6 @@
-package br.com.caelum.clines.api.aircraft;
+package br.com.caelum.clines.api.users;
 
-import br.com.caelum.clines.shared.domain.Aircraft;
-import br.com.caelum.clines.shared.domain.AircraftModel;
-import org.junit.jupiter.api.BeforeEach;
+import br.com.caelum.clines.shared.domain.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
@@ -25,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureTestEntityManager
 @Transactional
-class AircraftControllerTest {
+public class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -33,32 +31,23 @@ class AircraftControllerTest {
     @Autowired
     private TestEntityManager entityManager;
 
-    private AircraftModel BOEING;
-
-    @BeforeEach
-    void setup() {
-        BOEING = new AircraftModel("Boeing 737 800");
-        entityManager.persist(BOEING);
+    @Test
+    void shouldReturn404WhenNotExistUserById() throws Exception {
+        mockMvc.perform(get("/users/999")).andExpect(status().isNotFound());
     }
 
     @Test
-    void shouldReturn404WhenNotExistAircraftByCode() throws Exception {
-        mockMvc.perform(get("/aircraft/ASDF1234"))
-                .andExpect(status().isNotFound());
-    }
+    void shouldReturnAnUserById() throws Exception {
+        var user = new User("Fulane", "fulano@email.com", "123456");
 
-    @Test
-    void shouldReturnAnAircraftByCode() throws Exception {
-        var aircraft = new Aircraft("ASDF1234", BOEING);
-
-        entityManager.persist(aircraft);
+        entityManager.persist(user);
 
 
-        mockMvc.perform(get("/aircraft/ASDF1234"))
+        mockMvc.perform(get("/users/1"))
                 .andExpect(status().isOk())
                 .andDo(log())
-                .andExpect(jsonPath("$.code", equalTo("ASDF1234")))
-                .andExpect(jsonPath("$.model.id", equalTo(BOEING.getId().intValue())))
-                .andExpect(jsonPath("$.model.description", equalTo(BOEING.getDescription())));
+                .andExpect(jsonPath("$.name", equalTo(user.getName())))
+                .andExpect(jsonPath("$.email", equalTo(user.getEmail())));
     }
+
 }
