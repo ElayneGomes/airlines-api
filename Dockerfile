@@ -4,7 +4,7 @@ WORKDIR /airlines
 
 COPY target/*.jar /airlines/app.jar
 
-EXPOSE 3000
+EXPOSE 8080
 
-CMD java -XX:+UseContainerSupport -jar app.jar
+CMD java -XX:+UseContainerSupport -Xmx512m -jar app.jar --server.port=$PORT
 
